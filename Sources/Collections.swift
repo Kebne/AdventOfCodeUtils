@@ -33,7 +33,11 @@ public extension Array {
 }
 
 public extension Array where Element: Hashable {
-    func countDictionary() -> [Element: Int] {
+
+    
+    /// Returns a dictionary where the element is the key and the number of times
+    ///  it exists as the value
+    var countedElements: [Element: Int] {
         var countDictionary: [Element: Int] = [:]
 
         for element in self {
