@@ -7,7 +7,15 @@ public enum Direction: CustomDebugStringConvertible, Sendable {
         case .right: "→"
         case .left: "← "
         case .up: "↑"
+        }
+    }
 
+    public var nextClockwise: Direction {
+        switch self {
+        case .up: return .right
+        case .right: return .down
+        case .down: return .left
+        case .left: return .up
         }
     }
 
@@ -44,9 +52,31 @@ public enum Direction: CustomDebugStringConvertible, Sendable {
     }
 }
 
+public enum Direction8: CustomDebugStringConvertible, Sendable, CaseIterable {
+    case north, east, south, west, northEast, northWest, southEast, southWest
+
+    public var debugDescription: String {
+        switch self {
+        case .north: "↑"
+        case .east: "→"
+        case .south: "↓"
+        case .west: "←"
+        case .northEast: "↗"
+        case .northWest: "↖"
+        case .southEast: "↘"
+        case .southWest: "↙"
+        }
+    }
+}
+
 public struct Point: Hashable {
     public let x: Int
     public let y: Int
+
+    public init(x: Int, y: Int) {
+        self.x = x
+        self.y = y
+    }
 
     public var neighbors: Set<Point> {
         Set([
@@ -68,6 +98,39 @@ public struct Point: Hashable {
             Point(x: x, y: y + 1),
             Point(x: x + 1, y: y),
         ])
+    }
+
+    public func pointsInAllDirections8(length: Int) -> [[Point]] {
+        Direction8.allCases.map {
+            points(in: $0, length: length)
+        }
+    }
+
+    public func points(in direction: Direction8, length: Int) -> [Point] {
+        var result: [Point] = []
+        for step in 1 ... length {
+            let nextPoint: Point
+            switch direction {
+            case .north:
+                nextPoint = Point(x: x, y: y - step)
+            case .east:
+                nextPoint = Point(x: x + step, y: y)
+            case .south:
+                nextPoint = Point(x: x, y: y + step)
+            case .west:
+                nextPoint = Point(x: x - step, y: y)
+            case .northEast:
+                nextPoint = Point(x: x + step, y: y - step)
+            case .northWest:
+                nextPoint = Point(x: x - step, y: y - step)
+            case .southEast:
+                nextPoint = Point(x: x + step, y: y + step)
+            case .southWest:
+                nextPoint = Point(x: x - step, y: y + step)
+            }
+            result.append(nextPoint)
+        }
+        return result
     }
 
     public func move(in direction: Direction, length: Int = 1) -> Point {
