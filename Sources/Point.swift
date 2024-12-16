@@ -10,6 +10,15 @@ public enum Direction: CustomDebugStringConvertible, Sendable {
         }
     }
 
+    public var opposite: Direction {
+        switch self {
+        case .up: return .down
+        case .right: return .left
+        case .down: return .up
+        case .left: return .right
+        }
+    }
+
     public var nextClockwise: Direction {
         switch self {
         case .up: return .right
@@ -69,7 +78,7 @@ public enum Direction8: CustomDebugStringConvertible, Sendable, CaseIterable {
     }
 }
 
-public struct Point: Hashable {
+public struct Point: Hashable, Sendable {
     public let x: Int
     public let y: Int
 
@@ -78,15 +87,19 @@ public struct Point: Hashable {
         self.y = y
     }
 
+    public static let zero = Point(x: 0, y: 0)
+
     public var neighbors: Set<Point> {
         Set([
+            Point(x: x - 1, y: y - 1),
+            Point(x: x, y: y - 1),
             Point(x: x - 1, y: y + 1),
             Point(x: x, y: y + 1),
             Point(x: x - 1, y: y + 1),
             Point(x: x - 1, y: y),
             Point(x: x + 1, y: y),
-            Point(x: x - 1, y: y - 1),
-            Point(x: x, y: y - 1),
+
+
             Point(x: x + 1, y: y - 1),
         ])
     }
@@ -103,6 +116,27 @@ public struct Point: Hashable {
     public func pointsInAllDirections8(length: Int) -> [[Point]] {
         Direction8.allCases.map {
             points(in: $0, length: length)
+        }
+    }
+
+    public func move(in direction: Direction8) -> Point {
+        switch direction {
+            case .north:
+            return Point(x: x, y: y - 1)
+        case .east:
+            return Point(x: x + 1, y: y)
+        case .south:
+            return Point(x: x, y: y + 1)
+        case .west:
+            return Point(x: x - 1, y: y)
+        case .northEast:
+            return Point(x: x + 1, y: y - 1)
+        case .northWest:
+            return Point(x: x - 1, y: y - 1)
+        case .southEast:
+            return Point(x: x + 1, y: y + 1)
+        case .southWest:
+            return Point(x: x - 1, y: y + 1)
         }
     }
 
