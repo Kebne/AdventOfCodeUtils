@@ -5,7 +5,7 @@ public enum Direction: CustomDebugStringConvertible, Sendable {
         switch self {
         case .down: "↓"
         case .right: "→"
-        case .left: "← "
+        case .left: "←"
         case .up: "↑"
         }
     }
@@ -140,6 +140,15 @@ public struct Point: Hashable, Sendable {
         }
     }
 
+    public func points(in direction: Direction, length: Int) -> [Point] {
+        var result: [Point] = []
+        for step in 1 ... length {
+            result.append(move(in: direction, length: step))
+        }
+
+        return result
+    }
+
     public func points(in direction: Direction8, length: Int) -> [Point] {
         var result: [Point] = []
         for step in 1 ... length {
@@ -191,6 +200,17 @@ public struct Point: Hashable, Sendable {
         fatalError()
     }
 
+    public func directions(to other: Point) -> [Direction] {
+
+        let xDir: Direction = other.x < x ? .left : .right
+        let xDirs = Array(repeating: xDir, count: abs(other.x - x))
+
+        let yDir: Direction = other.y < y ? .up : .down
+        let yDirs = Array(repeating: yDir, count: abs(other.y - y))
+
+        return xDirs + yDirs
+    }
+
     public func manhattanDistance(to other: Point) -> Int {
         abs(x - other.x) + abs(y - other.y)
     }
@@ -200,4 +220,17 @@ extension Point: CustomDebugStringConvertible {
     public var debugDescription: String {
         "x:\(x) y:\(y)"
     }
+}
+
+extension Point: ExpressibleByStringLiteral {
+    public init(stringLiteral value: StringLiteralType) {
+        //x|y
+        let components = value.split(separator: "|").map { String($0) }
+        guard components.count == 2 else {
+            fatalError("Invalid point string")
+        }
+
+        self.init(x: Int(components[0])!, y: Int(components[1])!)
+    }
+
 }

@@ -32,6 +32,17 @@ public extension Array {
     }
 }
 
+public extension Array where Element == Array<String> {
+    func printMap(highlight: [Point] = []) {
+        var map = self
+        highlight.forEach { hp in
+            map[hp.y][hp.x] = "O"
+        }
+        let toPrint = map.map { $0.joined() }.joined(separator: "\n")
+        print(toPrint)
+    }
+}
+
 public extension Array where Element: Hashable {
 
     
