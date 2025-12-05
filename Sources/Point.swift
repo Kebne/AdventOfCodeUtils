@@ -95,11 +95,9 @@ public struct Point: Hashable, Sendable {
             Point(x: x, y: y - 1),
             Point(x: x - 1, y: y + 1),
             Point(x: x, y: y + 1),
-            Point(x: x - 1, y: y + 1),
+            Point(x: x + 1, y: y + 1),
             Point(x: x - 1, y: y),
             Point(x: x + 1, y: y),
-
-
             Point(x: x + 1, y: y - 1),
         ])
     }
